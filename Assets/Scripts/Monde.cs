@@ -6,7 +6,8 @@ public class Monde : MonoBehaviour {
     public int nbMoutons = 10;
     public int nbLoups = 1;
     public float desiredSeparation = 1;
-    public float distanceAlignement = 10;
+	public float distanceAlignement = 10;
+	public float distanceSep = 10;
 
     List<GameObject> moutons = new List<GameObject>();
     List<GameObject> loups = new List<GameObject>();
@@ -66,10 +67,7 @@ public class Monde : MonoBehaviour {
         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.transform.position = mousePos;
     }
-
-    void separation(List<GameObject> groupe) {
-        
-    }
+		
 
     void alignement(List<GameObject> groupe, float facteur) {
         foreach (GameObject individu in groupe) {
@@ -94,7 +92,44 @@ public class Monde : MonoBehaviour {
         }
     }
 
+	void separation(List<GameObject> groupe, float facteur) {
+		Vector3 somme = new Vector3(0,0,0);
+
+		foreach (GameObject individu in groupe) {
+			int count = 0;
+			foreach (GameObject autreIndividu in groupe) {
+				if(autreIndividu != individu) {
+					Vector3 dist = individu.transform.position - autreIndividu.transform.position;
+					if(dist.sqrMagnitude < this.distanceAlignement * this.distanceAlignement) {
+						count++;
+						somme += dist.normalized / distanceSep;
+					}
+					if (count > 0) {
+						somme.Normalize();
+						somme *= individu.GetComponent<Mover> ().maxSpeed;
+
+						Vector3 steer = somme - individu.GetComponent<Mover> ().vel;
+						steer = limit (steer, individu.GetComponent<Mover> ().maxForce);
+						individu.GetComponent<Mover> ().applyForce (steer);
+					}
+				}
+
+			}
+		}
+	
+	}
+
     void flocking(List<GameObject> groupe) {
 
     }
+
+	Vector3 limit(Vector3 vec, float limit){
+		if (vec.magnitude > limit) {
+			return vec.normalized * limit;
+		}
+		else {
+			return vec;
+		}
+			
+	}
 }
