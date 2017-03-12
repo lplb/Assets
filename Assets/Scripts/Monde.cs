@@ -9,6 +9,9 @@ public class Monde : MonoBehaviour {
 	public float distanceSep = 10;
     public GameObject cameraBerger;
 
+
+	List<GameObject> borders = new List<GameObject>();
+
     List<GameObject> moutons = new List<GameObject>();
     List<GameObject> loups = new List<GameObject>();
     GameObject berger;
@@ -55,7 +58,14 @@ public class Monde : MonoBehaviour {
                 //mouton.GetComponent<Mover>().applyForce(0.5f * mouton.GetComponent<Mover>().flee(loup.transform.position));
             }
         }
-    }
+
+		foreach (GameObject mouton in moutons) {
+			Mover mover = mouton.GetComponent<Mover>();
+			foreach (GameObject border in borders){
+				mover.flee (border.transform.position);
+		}
+    	}
+	}
 
     void updateLoups(){
         foreach (GameObject loup in loups) {
@@ -103,7 +113,7 @@ public class Monde : MonoBehaviour {
             individu.GetComponent<Mover>().applyForce(steer);
         }
     }
-
+		
 	void separation(List<GameObject> groupe, float facteur) {
 		Vector3 somme = new Vector3(0,0,0);
 
@@ -116,23 +126,28 @@ public class Monde : MonoBehaviour {
 						count++;
 						somme += dist.normalized / distanceSep;
 					}
-					if (count > 0) {
-						//somme.Normalize();
-						//somme *= individu.GetComponent<Mover> ().maxSpeed;
-
-						Vector3 steer = somme - individu.GetComponent<Mover> ().vel;
-						steer = limit (steer*facteur, individu.GetComponent<Mover> ().maxForce);
-						individu.GetComponent<Mover> ().applyForce (steer);
-					}
 				}
 
+			}
+			if (count > 0) {
+				somme.Normalize();
+				somme *= individu.GetComponent<Mover> ().maxSpeed;
+				
+				Vector3 steer = somme - individu.GetComponent<Mover> ().vel;
+				steer = limit (steer*facteur, individu.GetComponent<Mover> ().maxForce);
+				individu.GetComponent<Mover> ().applyForce (steer);
 			}
 		}
 	
 	}
 
 
-    void flocking(List<GameObject> groupe) {
+
+    void flocking(List<GameObject> groupe , Vector3 target) {
+		float separationFactor = 1;
+		float alignementFactor = 1;
+		separation (groupe, separationFactor);
+		alignement (groupe, alignementFactor);
 
     }
 
