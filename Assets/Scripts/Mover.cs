@@ -22,7 +22,6 @@ public class Mover : MonoBehaviour {
         //if (Random.Range(0,100) < 1)
            // if (force.sqrMagnitude > 0.1)
                 acc += force;
-        Debug.Log(acc+"/"+vel);
     }
 
     public Vector3 arrive(Vector3 target) {
