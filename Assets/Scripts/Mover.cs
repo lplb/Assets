@@ -22,7 +22,6 @@ public class Mover : MonoBehaviour {
         //if (Random.Range(0,100) < 1)
            // if (force.sqrMagnitude > 0.1)
                 acc += force;
-        Debug.Log(acc+"/"+vel);
     }
 
     public Vector3 arrive(Vector3 target) {
@@ -66,21 +65,8 @@ public class Mover : MonoBehaviour {
 
         return(steer);
     }
-	/*
-	public Vector3 wander(){
-		float wanderR = 25;        
-		float wanderD = 80;        
-		float change = -0.3;
 
-		wandertheta += Random.Range(-change,change); 
 
-		Vector3 posCercle = (vel.normalized * wanderD) + transform.position;
-
-		Vector3 target = 
-		return seek (target);
-		
-	}
-*/
     public Vector3 flee(Vector3 target) {
         Vector3 dist = target - transform.position;
         dist.y = 0;
