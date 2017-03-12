@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -70,7 +70,7 @@ public class Monde : MonoBehaviour {
                 Destroy(moutonParti);
                 nbMoutons--;
             }
-            if(moutons[i].)
+            //if(moutons[i].)
         }
     }
 

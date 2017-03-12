@@ -66,6 +66,7 @@ public class Mover : MonoBehaviour {
         return(steer);
     }
 
+
     public Vector3 flee(Vector3 target) {
         Vector3 dist = target - transform.position;
         dist.y = 0;
@@ -81,6 +82,7 @@ public class Mover : MonoBehaviour {
 
        return(steer);
     }
+
 
     public void calculPhys() {
         transform.position += vel/2;
