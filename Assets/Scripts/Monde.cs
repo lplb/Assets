@@ -5,7 +5,6 @@ using UnityEngine;
 public class Monde : MonoBehaviour {
     public int nbMoutons = 10;
     public int nbLoups = 1;
-    public float desiredSeparation = 1;
 	public float distanceAlignement = 10;
 	public float distanceSep = 10;
 
@@ -20,7 +19,7 @@ public class Monde : MonoBehaviour {
             moutons.Add((GameObject)Instantiate(Resources.Load("Mouton")));
             moutons[i].transform.Translate(new Vector3(3*i,0,5*i));
             moutons[i].GetComponent<Mover>().maxSpeed = 1;
-            moutons[i].GetComponent<Mover>().maxForce = 10;
+            moutons[i].GetComponent<Mover>().maxForce = 1;
             moutons[i].GetComponent<Mover>().targetRadius = 5;
         }
         for (int i = 0; i < nbLoups; i++) {
@@ -30,7 +29,7 @@ public class Monde : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void FixedUpdate () {
         if(Input.GetMouseButton(0)) {
             click();
         }
@@ -40,10 +39,14 @@ public class Monde : MonoBehaviour {
     }
 
     void updateMoutons(){
-        alignement(moutons, 0.05f);
+       // alignement(moutons, 0.05f);
+        separation(moutons, 1);
         foreach (GameObject mouton in moutons) {
             mouton.GetComponent<Mover>().calculPhys();
             mouton.GetComponent<Mover>().applyForce(mouton.GetComponent<Mover>().arrive(mousePos));
+            foreach(GameObject loup in loups) {
+                //mouton.GetComponent<Mover>().applyForce(0.5f * mouton.GetComponent<Mover>().flee(loup.transform.position));
+            }
         }
     }
 
@@ -84,11 +87,8 @@ public class Monde : MonoBehaviour {
             }
             Vector3 desired = somme / count;
             Vector3 steer = desired.normalized * individu.GetComponent<Mover>().maxSpeed - individu.GetComponent<Mover>().vel;
-            if (steer.magnitude > individu.GetComponent<Mover>().maxForce) {
-                steer.Normalize();
-                steer *= individu.GetComponent<Mover>().maxForce;
-            }
-            individu.GetComponent<Mover>().applyForce(steer * facteur);
+            steer = limit(steer * facteur, individu.GetComponent<Mover>().maxForce);
+            individu.GetComponent<Mover>().applyForce(steer);
         }
     }
 
@@ -100,16 +100,16 @@ public class Monde : MonoBehaviour {
 			foreach (GameObject autreIndividu in groupe) {
 				if(autreIndividu != individu) {
 					Vector3 dist = individu.transform.position - autreIndividu.transform.position;
-					if(dist.sqrMagnitude < this.distanceAlignement * this.distanceAlignement) {
+					if(dist.sqrMagnitude < this.distanceSep * this.distanceSep) {
 						count++;
 						somme += dist.normalized / distanceSep;
 					}
 					if (count > 0) {
-						somme.Normalize();
-						somme *= individu.GetComponent<Mover> ().maxSpeed;
+						//somme.Normalize();
+						//somme *= individu.GetComponent<Mover> ().maxSpeed;
 
 						Vector3 steer = somme - individu.GetComponent<Mover> ().vel;
-						steer = limit (steer, individu.GetComponent<Mover> ().maxForce);
+						steer = limit (steer*facteur, individu.GetComponent<Mover> ().maxForce);
 						individu.GetComponent<Mover> ().applyForce (steer);
 					}
 				}

@@ -18,6 +18,7 @@ public class Mover : MonoBehaviour {
     }
 
     public void applyForce(Vector3 force) {
+        if(force.sqrMagnitude>0.1)
         acc += force;
     }
 
@@ -68,7 +69,7 @@ public class Mover : MonoBehaviour {
         dist.y = 0;
         Vector3 steer;
         dist.Normalize();
-        dist *= maxSpeed;
+        dist *= -maxSpeed;
 
         steer = dist - vel;
         if (steer.magnitude > maxForce) {
@@ -76,12 +77,16 @@ public class Mover : MonoBehaviour {
             steer *= maxForce;
         }
 
-       return((-1) * steer);
+       return(steer);
     }
 
     public void calculPhys() {
         transform.position += vel;
         vel += acc;
+        if (vel.sqrMagnitude > maxSpeed * maxSpeed) {
+            vel.Normalize();
+            vel *= maxSpeed;
+        }
         acc *= 0;
     }
 
