@@ -18,8 +18,11 @@ public class Mover : MonoBehaviour {
     }
 
     public void applyForce(Vector3 force) {
-        if(force.sqrMagnitude>0.1)
-        acc += force;
+  
+        //if (Random.Range(0,100) < 1)
+           // if (force.sqrMagnitude > 0.1)
+                acc += force;
+        Debug.Log(acc+"/"+vel);
     }
 
     public Vector3 arrive(Vector3 target) {
@@ -91,12 +94,13 @@ public class Mover : MonoBehaviour {
     }
 
     public void calculPhys() {
-        transform.position += vel;
+        transform.position += vel/2;
         vel += acc;
         if (vel.sqrMagnitude > maxSpeed * maxSpeed) {
             vel.Normalize();
             vel *= maxSpeed;
         }
+        transform.position += vel / 2;
         acc *= 0;
     }
 
