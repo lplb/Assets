@@ -8,6 +8,7 @@ public class Monde : MonoBehaviour {
 	public float distanceAlignement = 10;
 	public float distanceSep = 10;
     public int dimensionMap;
+    public GameObject interieurEnclos;
 
     List<GameObject> moutons = new List<GameObject>();
     List<GameObject> loups = new List<GameObject>();
@@ -61,7 +62,7 @@ public class Monde : MonoBehaviour {
                     mover.applyForce(0.5f * mover.flee(loup.transform.position));
             }
             if ((berger.transform.position - moutons[i].transform.position).sqrMagnitude < 25)
-                mover.applyForce(0.25f * mover.flee(berger.transform.position));
+                mover.applyForce(mover.arrive(berger.transform.position));
             mover.calculPhys();
             if (moutons[i].transform.position.x > dimensionMap || moutons[i].transform.position.z > dimensionMap) {
                 GameObject moutonParti = moutons[i];
@@ -69,6 +70,7 @@ public class Monde : MonoBehaviour {
                 Destroy(moutonParti);
                 nbMoutons--;
             }
+            if(moutons[i].)
         }
     }
 
